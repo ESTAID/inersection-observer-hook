@@ -1,35 +1,32 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import logo from './logo.svg';
-import './App.css';
-
-class App extends Component {
-  componentDidMount() {
-    axios.get('http://localhost:9000/testAPI').then(res => {
-      console.log(res);
-    });
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+import React, { Suspense, lazy } from 'react'
+import LocationObserver from './components/LocationObserver'
+import './App.css'
+import Content from './components/Content'
+const ContentLazy = lazy(() => import('./components/Content'))
+const Null = () => null
+const App = () => {
+  return (
+    <div className="app">
+      <Content />
+      <LocationObserver
+        onIntersection={() => {
+          console.log('onIntersection1')
+        }}
+      >
+        <Suspense fallback={<Null />}>
+          <ContentLazy />
+        </Suspense>
+      </LocationObserver>
+      <LocationObserver
+        onIntersection={() => {
+          console.log('onIntersection2')
+        }}
+      >
+        <Suspense fallback={<Null />}>
+          <ContentLazy />
+        </Suspense>
+      </LocationObserver>
+    </div>
+  )
 }
-
-export default App;
+export default App
